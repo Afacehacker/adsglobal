@@ -11,11 +11,16 @@ const createTransporter = async () => {
 
   try {
     transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: {
         user: smtpUser,
         pass: smtpPass,
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
     console.log('Primary Gmail SMTP Transporter initialized for:', smtpUser);
     return transporter;
@@ -35,7 +40,8 @@ const sendVerificationOTP = async (toEmail, otpCode, userName = 'Valued User') =
 
   try {
     const activeTransporter = await createTransporter();
-    const fromAddress = process.env.FROM_EMAIL || '"ADSGLOBAL Security" <no-reply@adsglobal.com>';
+    const smtpUser = process.env.SMTP_USER || 'janiellaton7@gmail.com';
+    const fromAddress = process.env.FROM_EMAIL || `"ADSGLOBAL Security" <${smtpUser}>`;
 
     const htmlContent = `
       <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc; border-radius: 16px;">
@@ -93,7 +99,8 @@ const sendVerificationOTP = async (toEmail, otpCode, userName = 'Valued User') =
 const sendWelcomeEmail = async (toEmail, userName = 'Valued Member') => {
   try {
     const activeTransporter = await createTransporter();
-    const fromAddress = process.env.FROM_EMAIL || '"ADSGLOBAL Team" <no-reply@adsglobal.com>';
+    const smtpUser = process.env.SMTP_USER || 'janiellaton7@gmail.com';
+    const fromAddress = process.env.FROM_EMAIL || `"ADSGLOBAL Team" <${smtpUser}>`;
 
     const htmlContent = `
       <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc; border-radius: 16px;">
