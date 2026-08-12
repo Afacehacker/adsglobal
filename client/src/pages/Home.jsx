@@ -318,29 +318,11 @@ const Home = () => {
                   </p>
                 </div>
 
-                <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-3">
+                <div className="border-t border-slate-100 dark:border-slate-800 pt-4">
                   <div className="flex justify-between items-center text-[10px] text-slate-400 font-mono">
                     <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5 text-emerald-500" /> {(ad.impressions_views || 0).toLocaleString()} Views</span>
                     <span className="flex items-center gap-1"><MousePointer className="w-3.5 h-3.5 text-violet-500" /> {(ad.clicks || 0).toLocaleString()} Clicks</span>
                   </div>
-
-                  {ad.posting_url ? (
-                    <a
-                      href={ad.posting_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 shadow-md hover:from-violet-700 hover:to-indigo-700 transition"
-                    >
-                      OPEN AD LINK <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  ) : (
-                    <Link
-                      to="/campaigns"
-                      className="w-full py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-xl text-xs flex items-center justify-center gap-1"
-                    >
-                      VIEW DETAILS
-                    </Link>
-                  )}
                 </div>
               </div>
             ))}

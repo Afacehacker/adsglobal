@@ -938,14 +938,6 @@ const Campaigns = () => {
                   </div>
                 )}
 
-                {cam.posting_url && (
-                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-xl flex items-center justify-between gap-2">
-                    <span className="font-semibold text-[10px]">Active Ad URL:</span>
-                    <a href={cam.posting_url} target="_blank" rel="noopener noreferrer" className="px-3 py-1 bg-emerald-500 text-white rounded-lg font-bold text-[9px] flex items-center gap-1 transition">
-                      OPEN AD LINK <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                )}
               </div>
             ))}
           </div>
