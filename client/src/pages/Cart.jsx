@@ -4,6 +4,85 @@ import { useCartStore } from '../store/cartStore';
 import { Trash2, ShoppingBag, Plus, Minus, Home, PlusCircle, AlertCircle, Coins, CreditCard, ChevronRight, Check } from 'lucide-react';
 import api from '../services/api';
 
+const COUNTRY_STATE_DATA = {
+  'United Kingdom': [
+    'Greater London', 'West Midlands (Birmingham)', 'Greater Manchester', 'West Yorkshire (Leeds)',
+    'Glasgow & Strathclyde', 'Edinburgh', 'Cardiff & South Wales', 'Belfast & Northern Ireland', 'Merseyside (Liverpool)',
+    'Tyne & Wear (Newcastle)', 'Bristol & South West', 'Leicestershire', 'Nottinghamshire', 'Hampshire', 'Essex', 'Kent', 'All Regions / Nationwide'
+  ],
+  'Nigeria': [
+    'Lagos', 'Abuja (FCT)', 'Rivers (Port Harcourt)', 'Oyo (Ibadan)', 'Kano', 'Kaduna', 
+    'Ogun', 'Edo (Benin City)', 'Enugu', 'Delta', 'Anambra', 'Akwa Ibom', 'Imo', 'Abia', 'Osun', 'Ondo', 'Kwara', 
+    'Cross River', 'Plateau', 'Benue', 'Niger', 'Bauchi', 'Adamawa', 'Taraba', 'Borno', 'Yobe', 'Gombe', 'Katsina', 
+    'Sokoto', 'Zamfara', 'Kebbi', 'Jigawa', 'Kogi', 'Nasarawa', 'Ekiti', 'Ebonyi', 'Bayelsa', 'All States / Nationwide'
+  ],
+  'United States': [
+    'California (Los Angeles/SF)', 'New York (NYC)', 'Texas (Houston/Dallas)', 'Florida (Miami)', 
+    'Illinois (Chicago)', 'Pennsylvania (Philly)', 'Georgia (Atlanta)', 'Ohio', 'North Carolina', 'Michigan (Detroit)', 
+    'New Jersey', 'Virginia', 'Washington (Seattle)', 'Massachusetts (Boston)', 'Arizona (Phoenix)', 'Indiana', 
+    'Tennessee', 'Maryland', 'Missouri', 'Wisconsin', 'Colorado (Denver)', 'Minnesota', 'South Carolina', 'Alabama', 
+    'Louisiana', 'Kentucky', 'Oregon', 'Oklahoma', 'Connecticut', 'Utah', 'Nevada (Las Vegas)', 'Iowa', 'Arkansas', 
+    'Mississippi', 'Kansas', 'New Mexico', 'Nebraska', 'Idaho', 'West Virginia', 'Hawaii', 'New Hampshire', 'Maine', 
+    'Montana', 'Rhode Island', 'Delaware', 'South Dakota', 'North Dakota', 'Alaska', 'Vermont', 'Wyoming', 'All States / Nationwide'
+  ],
+  'Canada': [
+    'Ontario (Toronto/Ottawa)', 'Quebec (Montreal)', 'British Columbia (Vancouver)', 
+    'Alberta (Calgary/Edmonton)', 'Manitoba (Winnipeg)', 'Saskatchewan', 'Nova Scotia', 'New Brunswick', 
+    'Newfoundland & Labrador', 'Prince Edward Island', 'All Provinces / Nationwide'
+  ],
+  'Germany': [
+    'Berlin', 'Bavaria (Munich)', 'North Rhine-Westphalia (Cologne/Dusseldorf)', 
+    'Baden-Württemberg (Stuttgart)', 'Hesse (Frankfurt)', 'Hamburg', 'Saxony', 'Lower Saxony', 'All States / Nationwide'
+  ],
+  'Finland': [
+    'Uusimaa (Helsinki)', 'Pirkanmaa (Tampere)', 'Varsinais-Suomi (Turku)', 
+    'North Ostrobothnia (Oulu)', 'Central Finland', 'All Regions / Nationwide'
+  ],
+  'France': [
+    'Île-de-France (Paris)', 'Auvergne-Rhône-Alpes (Lyon)', 
+    'Provence-Alpes-Côte d\'Azur (Marseille/Nice)', 'Occitanie (Toulouse)', 'Nouvelle-Aquitaine (Bordeaux)', 'All Regions / Nationwide'
+  ],
+  'Australia': [
+    'New South Wales (Sydney)', 'Victoria (Melbourne)', 'Queensland (Brisbane)', 
+    'Western Australia (Perth)', 'South Australia (Adelaide)', 'Tasmania', 'Australian Capital Territory (Canberra)', 'All States / Nationwide'
+  ],
+  'Italy': [
+    'Lombardy (Milan)', 'Lazio (Rome)', 'Campania (Naples)', 'Veneto (Venice)', 
+    'Piedmont (Turin)', 'Tuscany (Florence)', 'All Regions / Nationwide'
+  ],
+  'Spain': [
+    'Community of Madrid (Madrid)', 'Catalonia (Barcelona)', 'Andalusia (Seville/Malaga)', 
+    'Valencian Community (Valencia)', 'Basque Country (Bilbao)', 'All Regions / Nationwide'
+  ],
+  'South Africa': [
+    'Gauteng (Johannesburg/Pretoria)', 'Western Cape (Cape Town)', 
+    'KwaZulu-Natal (Durban)', 'Eastern Cape', 'Free State', 'All Provinces / Nationwide'
+  ],
+  'Ghana': [
+    'Greater Accra (Accra)', 'Ashanti (Kumasi)', 'Western Region', 'Eastern Region', 
+    'Central Region', 'Northern Region', 'All Regions / Nationwide'
+  ],
+  'Kenya': [
+    'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Kiambu', 'Uasin Gishu', 'All Counties / Nationwide'
+  ],
+  'United Arab Emirates': [
+    'Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'All Emirates / Nationwide'
+  ],
+  'Saudi Arabia': [
+    'Riyadh', 'Makkah (Jeddah)', 'Eastern Province (Dammam)', 'Madinah', 'All Provinces / Nationwide'
+  ],
+  'India': [
+    'Maharashtra (Mumbai)', 'Delhi NCR', 'Karnataka (Bengaluru)', 
+    'Tamil Nadu (Chennai)', 'Telangana (Hyderabad)', 'West Bengal (Kolkata)', 'All States / Nationwide'
+  ],
+  'Brazil': [
+    'São Paulo', 'Rio de Janeiro', 'Minas Gerais', 'Bahia', 'Paraná', 'All States / Nationwide'
+  ],
+  'Worldwide / Global': [
+    'All Global Cities & Regions (Global Audience)'
+  ]
+};
+
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, clearCart, selectedAddress, setSelectedAddress, deliveryMethod, setDeliveryMethod } = useCartStore();
   const navigate = useNavigate();
@@ -259,24 +338,29 @@ const Cart = () => {
                     <label className="text-[10px] uppercase font-bold text-slate-500">Country *</label>
                     <select
                       value={newAddress.country}
-                      onChange={(e) => setNewAddress({ ...newAddress, country: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-xl text-xs focus:outline-none"
+                      onChange={(e) => {
+                        const cty = e.target.value;
+                        const stList = COUNTRY_STATE_DATA[cty] || ['All Regions / Nationwide'];
+                        setNewAddress({ ...newAddress, country: cty, state: stList[0] });
+                      }}
+                      className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-xl text-xs font-semibold focus:outline-none"
                     >
-                      <option value="United Kingdom">United Kingdom</option>
-                      <option value="United States">United States</option>
-                      <option value="Canada">Canada</option>
+                      {Object.keys(COUNTRY_STATE_DATA).map((cty) => (
+                        <option key={cty} value={cty}>{cty}</option>
+                      ))}
                     </select>
                   </div>
                   <div className="space-y-1">
                     <label className="text-[10px] uppercase font-bold text-slate-500">State / Region *</label>
-                    <input
-                      type="text"
+                    <select
                       value={newAddress.state}
                       onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
-                      placeholder="e.g. London"
-                      className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-xl text-xs focus:outline-none"
-                      required
-                    />
+                      className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-xl text-xs font-semibold focus:outline-none"
+                    >
+                      {(COUNTRY_STATE_DATA[newAddress.country] || ['All Regions / Nationwide']).map((st) => (
+                        <option key={st} value={st}>{st}</option>
+                      ))}
+                    </select>
                   </div>
                   <div className="space-y-1">
                     <label className="text-[10px] uppercase font-bold text-slate-500">City *</label>
