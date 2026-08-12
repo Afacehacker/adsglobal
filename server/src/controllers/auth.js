@@ -310,3 +310,36 @@ exports.updateProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Change user password
+// @route   PUT /api/auth/change-password
+// @access  Private
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Please provide current and new password' });
+    }
+
+    const user = await User.findById(req.user._id).select('+password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password updated successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
