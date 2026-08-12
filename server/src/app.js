@@ -64,6 +64,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Root Welcome & Health Check Route
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    service: 'ADSGLOBAL API Backend Service',
+    status: 'online',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health Check Endpoint (Deployment readiness requirement)
 app.get('/api/health', (req, res) => {
   res.status(200).json({
