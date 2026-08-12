@@ -65,14 +65,17 @@ exports.login = async (req, res, next) => {
       return res.status(400).json({ error: 'Please provide an email and password' });
     }
 
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPassword = password.trim();
+
     // Check for user
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: cleanEmail }).select('+password');
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
     // Check password
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await user.comparePassword(cleanPassword);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }

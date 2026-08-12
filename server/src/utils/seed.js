@@ -40,7 +40,7 @@ const seedData = async () => {
       email: 'admin@adsglobal.com',
       phone: '+2348012345678',
       country: 'Nigeria',
-      password: 'adminpassword2026',
+      password: 'admin123',
       role: 'SUPER_ADMIN',
       emailVerified: true
     });
