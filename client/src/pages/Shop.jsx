@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Grid, HelpCircle, Package, Layers, Info } from 'lucide-react';
+import { Search, Package, Layers, Info } from 'lucide-react';
 import api from '../services/api';
 
 const Shop = () => {
@@ -9,29 +9,27 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-
   const [sortOrder, setSortOrder] = useState('asc'); // Cheap ones first by default
 
   const fetchCategories = async () => {
     try {
       const res = await api.get('/categories');
-      setCategories(res.data.categories);
+      setCategories(res.data.categories || []);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching categories:', err);
     }
   };
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const params = { limit: 200, order: sortOrder };
-      if (selectedCategory) params.category = selectedCategory;
+      const params = { limit: 500, order: sortOrder };
       if (search) params.search = search;
       
       const res = await api.get('/products', { params });
-      setProducts(res.data.products);
+      setProducts(res.data.products || []);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching products:', err);
     } finally {
       setLoading(false);
     }
@@ -43,16 +41,38 @@ const Shop = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [selectedCategory, search, sortOrder]);
+  }, [search, sortOrder]);
 
-  // Helper to group products by category
+  // Robust helper to compare product category with target category ID / Name / Slug
+  const isMatchCategory = (prodCat, targetIdOrName) => {
+    if (!prodCat || !targetIdOrName) return false;
+    
+    const catId = typeof prodCat === 'object' ? String(prodCat._id || '') : String(prodCat);
+    const catName = (typeof prodCat === 'object' ? (prodCat.name || '') : '').toLowerCase();
+    const catSlug = (typeof prodCat === 'object' ? (prodCat.slug || '') : '').toLowerCase();
+
+    const target = String(targetIdOrName).toLowerCase();
+    return catId.toLowerCase() === target || catName === target || catSlug === target;
+  };
+
+  // Helper for sidebar category badge count
+  const getCategoryCount = (catId, catName) => {
+    return products.filter(p => isMatchCategory(p.category, catId) || isMatchCategory(p.category, catName)).length;
+  };
+
+  // Filter products for single selected category
+  const filteredProducts = selectedCategory
+    ? products.filter(p => isMatchCategory(p.category, selectedCategory))
+    : products;
+
+  // Group products by category for "All Categories" view
   const groupedProducts = categories.map(cat => ({
     category: cat,
-    items: products.filter(p => p.category?._id === cat._id || p.category?.name === cat.name)
+    items: products.filter(p => isMatchCategory(p.category, cat._id) || isMatchCategory(p.category, cat.name))
   })).filter(group => group.items.length > 0);
 
-  // If a specific category is selected, or search is active, get flat list
-  const activeCategoryName = categories.find(c => c._id === selectedCategory)?.name;
+  // Active category object
+  const activeCategory = categories.find(c => String(c._id) === String(selectedCategory) || c.slug === selectedCategory || c.name === selectedCategory);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
@@ -93,10 +113,10 @@ const Shop = () => {
           <div className="flex flex-wrap lg:flex-col gap-2">
             <button
               onClick={() => setSelectedCategory('')}
-              className={`px-4 py-2 text-left rounded-xl text-xs font-semibold transition flex justify-between items-center ${
+              className={`px-4 py-2.5 text-left rounded-xl text-xs font-bold transition flex justify-between items-center ${
                 selectedCategory === ''
                   ? 'bg-violet-600 text-white shadow-md'
-                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400'
+                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
               }`}
             >
               <span>All Categories</span>
@@ -104,35 +124,36 @@ const Shop = () => {
                 {products.length}
               </span>
             </button>
+
             {categories.map((cat) => {
-              const catCount = products.filter(p => p.category?._id === cat._id || p.category?.name === cat.name).length;
+              const count = getCategoryCount(cat._id, cat.name);
+              const isSelected = selectedCategory === cat._id || selectedCategory === cat.slug || selectedCategory === cat.name;
+
               return (
                 <button
                   key={cat._id}
                   onClick={() => setSelectedCategory(cat._id)}
-                  className={`px-4 py-2 text-left rounded-xl text-xs font-semibold transition flex justify-between items-center ${
-                    selectedCategory === cat._id
-                      ? 'bg-violet-600 text-white shadow-md'
+                  className={`px-4 py-2.5 text-left rounded-xl text-xs font-semibold transition flex justify-between items-center ${
+                    isSelected
+                      ? 'bg-violet-600 text-white shadow-md font-bold'
                       : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400'
                   }`}
                 >
                   <span>{cat.name}</span>
-                  {catCount > 0 && (
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ml-2 ${
-                      selectedCategory === cat._id ? 'bg-violet-700 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
-                    }`}>
-                      {catCount}
-                    </span>
-                  )}
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ml-2 ${
+                    isSelected ? 'bg-violet-700 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                  }`}>
+                    {count}
+                  </span>
                 </button>
               );
             })}
           </div>
           
           <div className="hidden lg:block bg-violet-500/5 border border-violet-500/10 p-4 rounded-2xl space-y-2">
-            <h4 className="font-bold text-xs text-violet-500 flex items-center gap-1.5"><Info className="w-3.5 h-3.5" /> Note on Delivery</h4>
+            <h4 className="font-bold text-xs text-violet-500 flex items-center gap-1.5"><Info className="w-3.5 h-3.5" /> Delivery Information</h4>
             <p className="text-[10px] text-slate-500 leading-relaxed">
-              Add products to your cart to estimate custom clearance and international weight-bracket forwarding fees on the checkout page. All quotes are authoritative.
+              Add products to your cart to estimate customs clearance and international weight-bracket shipping fees to the USA, UK, Canada & Europe.
             </p>
           </div>
         </div>
@@ -153,27 +174,32 @@ const Shop = () => {
                 </div>
               ))}
             </div>
-          ) : products.length === 0 ? (
+          ) : filteredProducts.length === 0 ? (
             // Empty State
             <div className="text-center py-20 bg-slate-50 dark:bg-slate-900/20 border border-slate-200 dark:border-slate-800 border-dashed rounded-3xl space-y-4">
               <Package className="w-12 h-12 mx-auto text-slate-400" />
               <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">No products found</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Try searching for another keyword or check another category</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Try searching for another keyword or pick another category</p>
+              <button
+                onClick={() => { setSelectedCategory(''); setSearch(''); }}
+                className="px-5 py-2 bg-violet-600 text-white font-bold text-xs rounded-xl shadow"
+              >
+                View All Products ({products.length})
+              </button>
             </div>
           ) : selectedCategory !== '' || search !== '' ? (
-            // Single Selected Category View
+            // Single Selected Category View (or Search View)
             <div className="space-y-6">
-              {activeCategoryName && (
-                <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-violet-600"></span>
-                    {activeCategoryName}
-                  </h2>
-                  <span className="text-xs font-semibold text-slate-500">{products.length} products available</span>
-                </div>
-              )}
+              <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-violet-600"></span>
+                  {activeCategory ? activeCategory.name : (search ? `Search Results for "${search}"` : 'Selected Category')}
+                </h2>
+                <span className="text-xs font-bold text-slate-500">{filteredProducts.length} products available</span>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {products.map((prod) => (
+                {filteredProducts.map((prod) => (
                   <ProductCard key={prod._id} prod={prod} />
                 ))}
               </div>
@@ -189,7 +215,7 @@ const Shop = () => {
                   </h2>
                   <button
                     onClick={() => setSelectedCategory(group.category._id)}
-                    className="text-xs font-bold text-violet-600 hover:text-violet-700 dark:text-violet-400"
+                    className="text-xs font-bold text-violet-600 hover:text-violet-700 dark:text-violet-400 hover:underline"
                   >
                     View category ({group.items.length}) →
                   </button>
