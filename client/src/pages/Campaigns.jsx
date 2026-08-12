@@ -32,8 +32,17 @@ const GOAL_OPTIONS = [
   { id: 'General Commercial Ads', name: 'General Commercial Ads', desc: 'Promote general products, apps & services' }
 ];
 
+const DEFAULT_FALLBACK_PLATFORMS = [
+  { _id: 'plat_wa', name: 'WhatsApp Ads', slug: 'whatsapp-ads' },
+  { _id: 'plat_zangi', name: 'Zangi Ads', slug: 'zangi-ads' },
+  { _id: 'plat_tt', name: 'TikTok Ads', slug: 'tiktok-ads' },
+  { _id: 'plat_fb', name: 'Facebook Ads', slug: 'facebook-ads' },
+  { _id: 'plat_snap', name: 'Snapchat Ads', slug: 'snapchat-ads' },
+  { _id: 'plat_all', name: 'All Social Media Platforms', slug: 'all-social-media' }
+];
+
 const Campaigns = () => {
-  const [platforms, setPlatforms] = useState([]);
+  const [platforms, setPlatforms] = useState(DEFAULT_FALLBACK_PLATFORMS);
   const [campaigns, setCampaigns] = useState([]);
   const [walletBalance, setWalletBalance] = useState(0);
 
@@ -44,7 +53,7 @@ const Campaigns = () => {
   const [submittedCampaignModal, setSubmittedCampaignModal] = useState(null);
 
   // Form State with user-friendly smart defaults
-  const [selectedPlatformId, setSelectedPlatformId] = useState('');
+  const [selectedPlatformId, setSelectedPlatformId] = useState(DEFAULT_FALLBACK_PLATFORMS[0]._id);
   const [selectedGoal, setSelectedGoal] = useState('Hookup Ads');
 
   // Age Preferences (Opening Page requirement)
@@ -118,18 +127,26 @@ const Campaigns = () => {
   const fetchCampaignData = async () => {
     try {
       const resPlat = await api.get('/campaigns/platforms');
-      setPlatforms(resPlat.data.platforms || []);
-      if (resPlat.data.platforms && resPlat.data.platforms.length > 0) {
+      if (resPlat.data?.platforms && resPlat.data.platforms.length > 0) {
+        setPlatforms(resPlat.data.platforms);
         setSelectedPlatformId(resPlat.data.platforms[0]._id);
       }
-
-      const resCams = await api.get('/campaigns');
-      setCampaigns(resCams.data.campaigns || []);
-
-      const resMe = await api.get('/auth/me');
-      setWalletBalance(resMe.data.wallet.balance || 0);
     } catch (err) {
-      console.error(err);
+      console.error('Failed to fetch platforms from API, using default list:', err);
+    }
+
+    try {
+      const resCams = await api.get('/campaigns');
+      setCampaigns(resCams.data?.campaigns || []);
+    } catch (err) {
+      // User might be unauthenticated, silence error
+    }
+
+    try {
+      const resMe = await api.get('/auth/me');
+      setWalletBalance(resMe.data?.wallet?.balance || 0);
+    } catch (err) {
+      // User might be unauthenticated, silence error
     } finally {
       setLoading(false);
     }

@@ -11,10 +11,10 @@ const upload = require('../middleware/upload');
 // Public routes
 router.get('/public/locations', getPublicLocationCounts);
 router.get('/public/search', searchPublicAds);
+router.get('/platforms', getCampaignPlatforms);
+router.get('/pricing-rules', getCampaignPricingRules);
 
 // Protected routes
-router.get('/platforms', protect, getCampaignPlatforms);
-router.get('/pricing-rules', protect, getCampaignPricingRules);
 router.post('/estimate', protect, estimateCampaignCost);
 router.post('/upload-creatives', protect, upload.array('files', 10), uploadCampaignMedia);
 router.post('/', protect, createCampaign);
