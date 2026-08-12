@@ -18,6 +18,9 @@ const createTransporter = async () => {
         host: smtpHost,
         port: parseInt(process.env.SMTP_PORT) || 587,
         secure: process.env.SMTP_SECURE === 'true',
+        connectionTimeout: 5000,
+        greetingTimeout: 5000,
+        socketTimeout: 5000,
         auth: {
           user: smtpUser,
           pass: smtpPass,
