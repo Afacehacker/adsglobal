@@ -8,6 +8,9 @@ const fs = require('fs');
 // Initialize Express App
 const app = express();
 
+// Enable Trust Proxy for Render / Vercel reverse proxy environments
+app.set('trust proxy', 1);
+
 // Load Security Headers
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
