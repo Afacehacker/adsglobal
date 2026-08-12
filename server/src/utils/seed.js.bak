@@ -1,0 +1,7 @@
+const fs = require('fs');
+const path = require('path');
+
+const seedFilePath = path.join(__dirname, '../../server/src/utils/seed.js');
+let content = fs.readFileSync(seedFilePath, 'utf8');
+
+console.log('Original seed.js length:', content.length);
