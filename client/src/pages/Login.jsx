@@ -34,6 +34,11 @@ const Login = () => {
       }
     } catch (err) {
       console.error(err);
+      if (err.response?.data?.requiresVerification && err.response?.data?.email) {
+        localStorage.setItem('pendingVerificationEmail', err.response.data.email);
+        navigate('/verify-email', { state: { email: err.response.data.email } });
+        return;
+      }
       setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
     } finally {
       setLoading(false);

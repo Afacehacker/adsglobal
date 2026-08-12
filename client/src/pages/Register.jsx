@@ -52,9 +52,8 @@ const Register = () => {
         password
       });
 
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
-      navigate('/dashboard');
+      localStorage.setItem('pendingVerificationEmail', email);
+      navigate('/verify-email', { state: { email } });
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.error || 'Registration failed. Try using a different email.');
