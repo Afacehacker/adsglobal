@@ -6,49 +6,21 @@ let transporter = null;
 const createTransporter = async () => {
   if (transporter) return transporter;
 
-  const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
   const smtpUser = process.env.SMTP_USER || 'janiellaton7@gmail.com';
   const smtpPass = (process.env.SMTP_PASS || 'ksbb gvcz wcdk wfjw').replace(/\s+/g, '');
 
-  // Primary: If custom SMTP / App Password exists
-  if (smtpUser && smtpPass) {
-    try {
-      transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: smtpHost,
-        port: 587,
-        secure: false,
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 10000,
-        auth: {
-          user: smtpUser,
-          pass: smtpPass,
-        },
-      });
-      console.log('Primary Gmail SMTP Transporter initialized for:', smtpUser);
-      return transporter;
-    } catch (err) {
-      console.warn('Primary SMTP initialization error:', err.message);
-    }
-  }
-
-  // Fallback: Create Ethereal test account on-the-fly (Guarantees background execution never throws)
   try {
-    const testAccount = await nodemailer.createTestAccount();
     transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
+      service: 'gmail',
       auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
+        user: smtpUser,
+        pass: smtpPass,
       },
     });
-    console.log('Ethereal Fail-Safe Test Account created:', testAccount.user);
+    console.log('Primary Gmail SMTP Transporter initialized for:', smtpUser);
     return transporter;
   } catch (err) {
-    console.error('All nodemailer transporters failed:', err.message);
+    console.error('Gmail SMTP initialization error:', err.message);
     return null;
   }
 };

@@ -34,7 +34,6 @@ exports.register = async (req, res, next) => {
           success: true,
           requiresVerification: true,
           email: userExists.email,
-          otpCode,
           message: 'Account exists but is unverified. A new 6-digit verification code was sent to your email.'
         });
       }
@@ -67,7 +66,6 @@ exports.register = async (req, res, next) => {
       success: true,
       requiresVerification: true,
       email: user.email,
-      otpCode, // Backup code helper
       message: 'Registration successful! A 6-digit verification code has been sent to your email address.'
     });
   } catch (error) {
@@ -178,7 +176,6 @@ exports.resendOTP = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      otpCode,
       message: 'A new 6-digit verification code has been sent to your email.'
     });
   } catch (error) {
@@ -228,8 +225,7 @@ exports.login = async (req, res, next) => {
       return res.status(403).json({
         error: 'Your email address is not verified yet. A 6-digit verification code has been sent to your email.',
         requiresVerification: true,
-        email: user.email,
-        otpCode
+        email: user.email
       });
     }
 
