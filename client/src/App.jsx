@@ -13,6 +13,10 @@ import Wallet from './pages/Wallet';
 import Campaigns from './pages/Campaigns';
 import Support from './pages/Support';
 import Admin from './pages/Admin';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
+import Refund from './pages/Refund';
+import Compliance from './pages/Compliance';
 
 // Components & Layouts
 import Navbar from './components/Navbar';
@@ -55,6 +59,10 @@ function App() {
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/refund" element={<Refund />} />
+            <Route path="/compliance" element={<Compliance />} />
 
             {/* Protected Customer Routes */}
             <Route path="/cart" element={

@@ -37,10 +37,10 @@ const Footer = () => {
           <div>
             <h4 className="font-bold text-slate-800 dark:text-slate-200 mb-4 text-xs uppercase tracking-wider">Legal & Rules</h4>
             <ul className="space-y-2 text-xs">
-              <li className="flex items-center gap-1.5"><FileText className="w-3 h-3 text-slate-400" /> <span className="cursor-pointer hover:text-slate-900 dark:hover:text-white">Terms of Service</span></li>
-              <li className="flex items-center gap-1.5"><FileText className="w-3 h-3 text-slate-400" /> <span className="cursor-pointer hover:text-slate-900 dark:hover:text-white">Privacy Policy</span></li>
-              <li className="flex items-center gap-1.5"><FileText className="w-3 h-3 text-slate-400" /> <span className="cursor-pointer hover:text-slate-900 dark:hover:text-white">Refund Policy</span></li>
-              <li className="flex items-center gap-1.5"><FileText className="w-3 h-3 text-slate-400" /> <span className="cursor-pointer hover:text-slate-900 dark:hover:text-white">Advertising Compliance Guidelines</span></li>
+              <li className="flex items-center gap-1.5"><FileText className="w-3 h-3 text-slate-400" /> <Link to="/terms" className="hover:text-slate-900 dark:hover:text-white transition">Terms of Service</Link></li>
+              <li className="flex items-center gap-1.5"><FileText className="w-3 h-3 text-slate-400" /> <Link to="/privacy" className="hover:text-slate-900 dark:hover:text-white transition">Privacy Policy</Link></li>
+              <li className="flex items-center gap-1.5"><FileText className="w-3 h-3 text-slate-400" /> <Link to="/refund" className="hover:text-slate-900 dark:hover:text-white transition">Refund Policy</Link></li>
+              <li className="flex items-center gap-1.5"><FileText className="w-3 h-3 text-slate-400" /> <Link to="/compliance" className="hover:text-slate-900 dark:hover:text-white transition">Advertising Compliance Guidelines</Link></li>
             </ul>
           </div>
 
