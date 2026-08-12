@@ -342,49 +342,49 @@ const Home = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl space-y-4 shadow-sm">
-            <div className="h-48 rounded-2xl overflow-hidden bg-slate-950">
-              <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600" alt="Nigerian foodstuffs package" className="w-full h-full object-cover" />
+            <div className="h-52 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <img src="/images/testimonials/foodstuffs_uk.jpg" alt="Nigerian foodstuffs package unboxing in London" className="w-full h-full object-cover hover:scale-105 transition duration-300" />
             </div>
             <div className="space-y-2">
               <div className="flex text-amber-400 text-xs">★★★★★</div>
               <p className="text-xs text-slate-700 dark:text-slate-300 italic leading-relaxed">
-                "Sent a 15kg traditional foodstuffs pack to my sister in London SW1. Delivered in 4 days in perfect condition! Extremely fast forwarders."
+                "Sent a 15kg traditional foodstuffs pack (Dried Fish, Egusi, Stockfish & Spices) to my sister in London SW1. Delivered directly to her doorstep in 4 days!"
               </p>
               <div className="flex justify-between items-center text-[11px] font-bold text-slate-500 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <span>Dr. Kenneth O.</span>
-                <span className="text-violet-500">London, UK 🇬🇧</span>
+                <span className="text-violet-500 font-extrabold">London, UK 🇬🇧</span>
               </div>
             </div>
           </div>
 
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl space-y-4 shadow-sm">
-            <div className="h-48 rounded-2xl overflow-hidden bg-slate-950">
-              <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600" alt="Physical car delivery" className="w-full h-full object-cover" />
+            <div className="h-52 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <img src="/images/testimonials/car_dealership_us.jpg" alt="Houston Auto Group car dealership classified ad campaign" className="w-full h-full object-cover hover:scale-105 transition duration-300" />
             </div>
             <div className="space-y-2">
               <div className="flex text-amber-400 text-xs">★★★★★</div>
               <p className="text-xs text-slate-700 dark:text-slate-300 italic leading-relaxed">
-                "Promoted my vehicle dealership across Texas and Florida using WhatsApp and TikTok ad campaigns. Generated 48 hot leads in 48 hours!"
+                "Promoted our vehicle dealership across Houston Texas using TikTok and Instagram ads through ADSGLOBAL. Generated 48 qualified buyer leads in 48 hours!"
               </p>
               <div className="flex justify-between items-center text-[11px] font-bold text-slate-500 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <span>Sarah Jenkins</span>
-                <span className="text-violet-500">Houston, USA 🇺🇸</span>
+                <span>Sarah Jenkins (Houston Auto)</span>
+                <span className="text-violet-500 font-extrabold">Houston, USA 🇺🇸</span>
               </div>
             </div>
           </div>
 
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl space-y-4 shadow-sm">
-            <div className="h-48 rounded-2xl overflow-hidden bg-slate-950">
-              <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600" alt="Gift basket delivery" className="w-full h-full object-cover" />
+            <div className="h-52 rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <img src="/images/testimonials/gift_basket_lagos.jpg" alt="Delivered luxury birthday gift hamper in Lagos" className="w-full h-full object-cover hover:scale-105 transition duration-300" />
             </div>
             <div className="space-y-2">
               <div className="flex text-amber-400 text-xs">★★★★★</div>
               <p className="text-xs text-slate-700 dark:text-slate-300 italic leading-relaxed">
-                "Ordered a birthday luxury gift hamper for my mom in Lagos. The delivery team packaged it so nicely. Will definitely use ADSGLOBAL again."
+                "Ordered a 'Happy Birthday Mom' luxury gift hamper with wine, Ferrero Rocher & fresh lilies delivered to my mother's living room in Lagos while I was in Toronto!"
               </p>
               <div className="flex justify-between items-center text-[11px] font-bold text-slate-500 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <span>Tunde Bakare</span>
-                <span className="text-violet-500">Toronto, Canada 🇨🇦</span>
+                <span className="text-violet-500 font-extrabold">Toronto, Canada 🇨🇦</span>
               </div>
             </div>
           </div>
