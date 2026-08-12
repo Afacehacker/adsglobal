@@ -60,10 +60,14 @@ const Shop = () => {
     return products.filter(p => isMatchCategory(p.category, catId) || isMatchCategory(p.category, catName)).length;
   };
 
-  // Filter products for single selected category
-  const filteredProducts = selectedCategory
-    ? products.filter(p => isMatchCategory(p.category, selectedCategory))
-    : products;
+  // Filter products for selected category and search query
+  const filteredProducts = products.filter(p => {
+    const matchesCat = !selectedCategory || isMatchCategory(p.category, selectedCategory);
+    const matchesSearch = !search.trim() || 
+      p.name.toLowerCase().includes(search.toLowerCase()) || 
+      (p.description && p.description.toLowerCase().includes(search.toLowerCase()));
+    return matchesCat && matchesSearch;
+  });
 
   // Group products by category for "All Categories" view
   const groupedProducts = categories.map(cat => ({

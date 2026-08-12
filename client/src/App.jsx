@@ -22,6 +22,7 @@ import Compliance from './pages/Compliance';
 // Components & Layouts
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import FloatingSupportWidget from './components/FloatingSupportWidget';
 
 // Route guards
 const ProtectedRoute = ({ children }) => {
@@ -105,6 +106,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        <FloatingSupportWidget />
       </div>
     </Router>
   );

@@ -91,6 +91,20 @@ const Dashboard = () => {
         </div>
       )}
 
+      {/* Starter Bonus Toast Banner */}
+      <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border border-emerald-500/20 p-4 rounded-2xl flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white font-black flex items-center justify-center text-sm shadow-md">🎁</div>
+          <div>
+            <h4 className="font-extrabold text-xs text-slate-800 dark:text-white">Active Member Welcome Bonus</h4>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">Prepaid COIN wallet initialized — 1 COIN = ₦1. Ready for global package forwarding & ads!</p>
+          </div>
+        </div>
+        <Link to="/wallet" className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl transition shrink-0">
+          FUND WALLET
+        </Link>
+      </div>
+
       {/* Aggregate Balance & Stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex items-center gap-4">
