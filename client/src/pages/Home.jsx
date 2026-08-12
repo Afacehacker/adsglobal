@@ -6,6 +6,7 @@ import {
   Eye, MousePointer, ExternalLink, Filter, Building, Compass, Gift, Heart, PackageCheck
 } from 'lucide-react';
 import api from '../services/api';
+import TelegramModal from '../components/TelegramModal';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -364,6 +365,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Telegram Channel Invitation Modal (Triggers on load/reload, 2-hour snooze) */}
+      <TelegramModal />
     </div>
   );
 };
