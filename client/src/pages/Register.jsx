@@ -12,6 +12,7 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -31,6 +32,11 @@ const Register = () => {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
+      return;
+    }
+
+    if (!acceptTerms) {
+      setError('You must accept the Terms and Conditions to create an account');
       return;
     }
 
@@ -176,9 +182,32 @@ const Register = () => {
             </div>
           </div>
 
+          <div className="flex items-start gap-2.5 pt-1">
+            <input
+              type="checkbox"
+              id="acceptTerms"
+              checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-violet-600 focus:ring-violet-500 bg-slate-50 dark:bg-slate-900 cursor-pointer shrink-0"
+              required
+            />
+            <label htmlFor="acceptTerms" className="text-xs text-slate-600 dark:text-slate-400 cursor-pointer leading-tight">
+              I agree to the{' '}
+              <Link to="/terms" target="_blank" className="text-violet-600 dark:text-violet-400 font-bold hover:underline">
+                Terms of Service
+              </Link>,{' '}
+              <Link to="/privacy" target="_blank" className="text-violet-600 dark:text-violet-400 font-bold hover:underline">
+                Privacy Policy
+              </Link>, and{' '}
+              <Link to="/refund" target="_blank" className="text-violet-600 dark:text-violet-400 font-bold hover:underline">
+                Refund Policy
+              </Link>.
+            </label>
+          </div>
+
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !acceptTerms}
             className="w-full py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-md hover:shadow-violet-500/25 transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? (
