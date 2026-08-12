@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 // Determine Base API URL dynamically for Vercel & Render deployment
 const API_BASE_URL = import.meta.env.VITE_API_URL
   ? (import.meta.env.VITE_API_URL.endsWith('/api') ? import.meta.env.VITE_API_URL : `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`)
