@@ -65,6 +65,7 @@ exports.register = async (req, res, next) => {
       success: true,
       requiresVerification: true,
       email: user.email,
+      otpCode, // Backup code helper
       message: 'Registration successful! A 6-digit verification code has been sent to your email address.'
     });
   } catch (error) {
@@ -174,6 +175,7 @@ exports.resendOTP = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
+      otpCode,
       message: 'A new 6-digit verification code has been sent to your email.'
     });
   } catch (error) {

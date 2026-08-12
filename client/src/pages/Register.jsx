@@ -53,7 +53,10 @@ const Register = () => {
       });
 
       localStorage.setItem('pendingVerificationEmail', email);
-      navigate('/verify-email', { state: { email } });
+      if (res.data.otpCode) {
+        localStorage.setItem('pendingOTPCode', res.data.otpCode);
+      }
+      navigate('/verify-email', { state: { email, otpCode: res.data.otpCode } });
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.error || 'Registration failed. Try using a different email.');

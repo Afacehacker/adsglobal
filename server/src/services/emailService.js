@@ -6,26 +6,31 @@ let transporter = null;
 const createTransporter = async () => {
   if (transporter) return transporter;
 
-  // Primary: Check if environment contains custom SMTP config
-  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+  const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+  const smtpUser = process.env.SMTP_USER || 'janiellaton7@gmail.com';
+  const smtpPass = process.env.SMTP_PASS;
+
+  // Primary: If custom SMTP / App Password exists
+  if (smtpUser && smtpPass) {
     try {
       transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
+        service: smtpUser.includes('@gmail.com') ? 'gmail' : undefined,
+        host: smtpHost,
         port: parseInt(process.env.SMTP_PORT) || 587,
         secure: process.env.SMTP_SECURE === 'true',
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
+          user: smtpUser,
+          pass: smtpPass,
         },
       });
-      console.log('Primary SMTP Transporter initialized successfully.');
+      console.log('Primary SMTP Transporter initialized for:', smtpUser);
       return transporter;
     } catch (err) {
-      console.warn('Primary SMTP initialization failed, switching to fail-safe fallback:', err.message);
+      console.warn('Primary SMTP initialization error:', err.message);
     }
   }
 
-  // Fallback: Create Ethereal test account on-the-fly (Guarantees sending NEVER fails!)
+  // Fallback: Create Ethereal test account on-the-fly (Guarantees background execution never throws)
   try {
     const testAccount = await nodemailer.createTestAccount();
     transporter = nodemailer.createTransport({

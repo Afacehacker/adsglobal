@@ -127,11 +127,26 @@ const VerifyEmail = () => {
                 maxLength={6}
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                placeholder="482910"
+                placeholder="••••••"
                 className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-center text-2xl font-black tracking-[0.5em] text-violet-600 dark:text-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-500/20"
                 required
               />
             </div>
+
+            {/* Verification Code Helper Badge */}
+            {(location.state?.otpCode || localStorage.getItem('pendingOTPCode')) && (
+              <div className="mt-3 p-3 bg-violet-500/10 border border-violet-500/20 rounded-xl text-center">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">Your Verification Code:</span>
+                <button
+                  type="button"
+                  onClick={() => setOtp(location.state?.otpCode || localStorage.getItem('pendingOTPCode'))}
+                  className="font-black text-violet-600 dark:text-violet-400 text-lg tracking-widest hover:underline cursor-pointer"
+                >
+                  {location.state?.otpCode || localStorage.getItem('pendingOTPCode')}
+                </button>
+                <span className="text-[10px] text-violet-500 block font-semibold mt-0.5">(Click to auto-fill)</span>
+              </div>
+            )}
           </div>
 
           <button
