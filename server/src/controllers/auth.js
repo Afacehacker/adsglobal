@@ -20,53 +20,39 @@ exports.register = async (req, res, next) => {
     // Check if user exists
     const userExists = await User.findOne({ email: cleanEmail });
     if (userExists) {
-      if (!userExists.emailVerified) {
-        // Generate new OTP for existing unverified user
-        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-        userExists.emailOTP = otpCode;
-        userExists.emailOTPExpires = new Date(Date.now() + 15 * 60 * 1000);
-        await userExists.save();
-
-        // Send Verification OTP Email
-        await sendVerificationOTP(userExists.email, otpCode, userExists.name);
-
-        return res.status(200).json({
-          success: true,
-          requiresVerification: true,
-          email: userExists.email,
-          message: 'Account exists but is unverified. A new 6-digit verification code was sent to your email.'
-        });
-      }
       return res.status(400).json({ error: 'User already exists with this email address' });
     }
 
-    // Generate 6-digit Verification OTP
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes validity
-
-    // Create User (emailVerified = false by default)
+    // Create User (emailVerified = true by default)
     const user = await User.create({
       name,
       email: cleanEmail,
       phone,
       country,
       password,
-      emailVerified: false,
-      emailOTP: otpCode,
-      emailOTPExpires: otpExpires
+      emailVerified: true
     });
 
     // Create associated Wallet for user
     await Wallet.create({ user: user._id });
 
-    // Send Verification OTP Email
-    await sendVerificationOTP(user.email, otpCode, user.name);
+    // Send Welcome Email immediately upon registration
+    sendWelcomeEmail(user.email, user.name).catch(err => console.error('Welcome email error:', err.message));
+
+    // Generate Token for instant login
+    const token = signToken(user._id);
 
     res.status(201).json({
       success: true,
-      requiresVerification: true,
-      email: user.email,
-      message: 'Registration successful! A 6-digit verification code has been sent to your email address.'
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        country: user.country,
+        role: user.role
+      }
     });
   } catch (error) {
     next(error);
@@ -209,24 +195,6 @@ exports.login = async (req, res, next) => {
 
     if (user.status === 'SUSPENDED') {
       return res.status(403).json({ error: 'Your account has been suspended. Please contact support.' });
-    }
-
-    // Check Email Verification (Allow official admins to bypass if needed)
-    if (!user.emailVerified && user.role === 'USER') {
-      // Auto-send fresh OTP code if unverified user attempts to login
-      const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-      user.emailOTP = otpCode;
-      user.emailOTPExpires = new Date(Date.now() + 15 * 60 * 1000);
-      await user.save();
-
-      // Send Verification OTP Email
-      await sendVerificationOTP(user.email, otpCode, user.name);
-
-      return res.status(403).json({
-        error: 'Your email address is not verified yet. A 6-digit verification code has been sent to your email.',
-        requiresVerification: true,
-        email: user.email
-      });
     }
 
     const token = signToken(user._id);

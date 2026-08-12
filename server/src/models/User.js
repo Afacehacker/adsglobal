@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema({
   },
   emailVerified: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   emailOTP: String,
   emailOTPExpires: Date,
