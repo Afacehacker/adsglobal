@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
 import { ShoppingCart, Heart, ShieldAlert, Check, HelpCircle, Truck, Calculator, Coins } from 'lucide-react';
 import api from '../services/api';
+import AddressAutocomplete from '../components/AddressAutocomplete';
 
 const COUNTRY_STATE_DATA = {
   'United Kingdom': [
@@ -263,7 +264,23 @@ const ProductDetails = () => {
           <h3 className="font-extrabold text-slate-800 dark:text-white flex items-center gap-2 text-lg">
             <Calculator className="w-5 h-5 text-violet-500" /> Interactive Shipping Calculator
           </h3>
-          <p className="text-xs text-slate-400">Calculate delivery estimates for this quantity before checking out</p>
+          <p className="text-xs text-slate-400">Search any country, state, city or precise street address in real-time or auto-detect your location</p>
+        </div>
+
+        {/* Real-time Address & Location Tracker */}
+        <div className="bg-white dark:bg-slate-950 p-4 border border-slate-200 dark:border-slate-800 rounded-2xl">
+          <AddressAutocomplete
+            label="Real-time Country, State & Precise Address Search"
+            placeholder="Type e.g. 10 Downing Street London, 100 Wall Street NYC, 12 Allen Ave Lagos..."
+            onSelectLocation={(item) => {
+              if (item.country && COUNTRY_STATE_DATA[item.country]) {
+                setCountry(item.country);
+                setState(item.state || COUNTRY_STATE_DATA[item.country][0]);
+              } else if (item.address) {
+                setState(item.address);
+              }
+            }}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">

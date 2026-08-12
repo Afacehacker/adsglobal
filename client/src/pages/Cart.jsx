@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
 import { Trash2, ShoppingBag, Plus, Minus, Home, PlusCircle, AlertCircle, Coins, CreditCard, ChevronRight, Check } from 'lucide-react';
 import api from '../services/api';
+import AddressAutocomplete from '../components/AddressAutocomplete';
 
 const COUNTRY_STATE_DATA = {
   'United Kingdom': [
@@ -308,6 +309,22 @@ const Cart = () => {
             {/* Inline Address Creation Form */}
             {showAddressForm && (
               <form onSubmit={handleAddressSubmit} className="bg-slate-50 dark:bg-slate-950 p-4 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-4">
+                <div className="bg-white dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-800 rounded-xl">
+                  <AddressAutocomplete
+                    label="Real-time Address Autocomplete & GPS Pinpoint"
+                    placeholder="Search precise street address or click GPS to auto-fill..."
+                    onSelectLocation={(item) => {
+                      setNewAddress({
+                        ...newAddress,
+                        country: item.country || newAddress.country,
+                        state: item.state || newAddress.state,
+                        city: item.city || newAddress.city || item.state,
+                        street_address: item.address || newAddress.street_address
+                      });
+                    }}
+                  />
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] uppercase font-bold text-slate-500">Recipient Name *</label>
