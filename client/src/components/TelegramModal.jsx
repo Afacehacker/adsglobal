@@ -22,17 +22,21 @@ const TelegramModal = () => {
     }
   }, []);
 
-  const handleClose = () => {
-    // Hide popup for 2 hours
+  // Dismiss for current view without setting 2-hour snooze key
+  const handleCloseOnly = () => {
+    setIsOpen(false);
+  };
+
+  // Snooze popup for 2 hours (only when "Remind Me Later (Hide for 2 Hours)" or "Join Telegram" is clicked)
+  const handleSnoozeTwoHours = () => {
     const hideUntil = Date.now() + TWO_HOURS_MS;
     localStorage.setItem(HIDE_STORAGE_KEY, hideUntil.toString());
     setIsOpen(false);
   };
 
   const handleJoinTelegram = () => {
-    // Open Telegram link in new tab and set 2-hour hide timer
     window.open(TELEGRAM_LINK, '_blank', 'noopener,noreferrer');
-    handleClose();
+    handleSnoozeTwoHours();
   };
 
   if (!isOpen) return null;
@@ -44,11 +48,11 @@ const TelegramModal = () => {
         {/* Top Decorative Banner */}
         <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-600"></div>
 
-        {/* Close Button */}
+        {/* Close Button (X dismisses for now, will show again on reload) */}
         <button
-          onClick={handleClose}
+          onClick={handleCloseOnly}
           className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-slate-800 transition"
-          title="Dismiss for 2 hours"
+          title="Close (Will reappear on next reload)"
         >
           <X className="w-4 h-4" />
         </button>
@@ -100,7 +104,7 @@ const TelegramModal = () => {
           </button>
 
           <button
-            onClick={handleClose}
+            onClick={handleSnoozeTwoHours}
             className="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition"
           >
             <Clock className="w-3.5 h-3.5 text-slate-400" />
