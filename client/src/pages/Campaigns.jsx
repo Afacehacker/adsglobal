@@ -41,6 +41,85 @@ const DEFAULT_FALLBACK_PLATFORMS = [
   { _id: 'plat_all', name: 'All Social Media Platforms', slug: 'all-social-media' }
 ];
 
+const COUNTRY_STATE_DATA = {
+  'Nigeria': [
+    'All States / Nationwide', 'Lagos', 'Abuja (FCT)', 'Rivers (Port Harcourt)', 'Oyo (Ibadan)', 'Kano', 'Kaduna', 
+    'Ogun', 'Edo (Benin City)', 'Enugu', 'Delta', 'Anambra', 'Akwa Ibom', 'Imo', 'Abia', 'Osun', 'Ondo', 'Kwara', 
+    'Cross River', 'Plateau', 'Benue', 'Niger', 'Bauchi', 'Adamawa', 'Taraba', 'Borno', 'Yobe', 'Gombe', 'Katsina', 
+    'Sokoto', 'Zamfara', 'Kebbi', 'Jigawa', 'Kogi', 'Nasarawa', 'Ekiti', 'Ebonyi', 'Bayelsa'
+  ],
+  'United Kingdom': [
+    'All Regions / Nationwide', 'Greater London', 'West Midlands (Birmingham)', 'Greater Manchester', 'West Yorkshire (Leeds)',
+    'Glasgow & Strathclyde', 'Edinburgh', 'Cardiff & South Wales', 'Belfast & Northern Ireland', 'Merseyside (Liverpool)',
+    'Tyne & Wear (Newcastle)', 'Bristol & South West', 'Leicestershire', 'Nottinghamshire', 'Hampshire', 'Essex', 'Kent'
+  ],
+  'United States': [
+    'All States / Nationwide', 'California (Los Angeles/SF)', 'New York (NYC)', 'Texas (Houston/Dallas)', 'Florida (Miami)', 
+    'Illinois (Chicago)', 'Pennsylvania (Philly)', 'Georgia (Atlanta)', 'Ohio', 'North Carolina', 'Michigan (Detroit)', 
+    'New Jersey', 'Virginia', 'Washington (Seattle)', 'Massachusetts (Boston)', 'Arizona (Phoenix)', 'Indiana', 
+    'Tennessee', 'Maryland', 'Missouri', 'Wisconsin', 'Colorado (Denver)', 'Minnesota', 'South Carolina', 'Alabama', 
+    'Louisiana', 'Kentucky', 'Oregon', 'Oklahoma', 'Connecticut', 'Utah', 'Nevada (Las Vegas)', 'Iowa', 'Arkansas', 
+    'Mississippi', 'Kansas', 'New Mexico', 'Nebraska', 'Idaho', 'West Virginia', 'Hawaii', 'New Hampshire', 'Maine', 
+    'Montana', 'Rhode Island', 'Delaware', 'South Dakota', 'North Dakota', 'Alaska', 'Vermont', 'Wyoming'
+  ],
+  'Canada': [
+    'All Provinces / Nationwide', 'Ontario (Toronto/Ottawa)', 'Quebec (Montreal)', 'British Columbia (Vancouver)', 
+    'Alberta (Calgary/Edmonton)', 'Manitoba (Winnipeg)', 'Saskatchewan', 'Nova Scotia', 'New Brunswick', 
+    'Newfoundland & Labrador', 'Prince Edward Island'
+  ],
+  'Germany': [
+    'All States / Nationwide', 'Berlin', 'Bavaria (Munich)', 'North Rhine-Westphalia (Cologne/Dusseldorf)', 
+    'Baden-Württemberg (Stuttgart)', 'Hesse (Frankfurt)', 'Hamburg', 'Saxony', 'Lower Saxony'
+  ],
+  'Finland': [
+    'All Regions / Nationwide', 'Uusimaa (Helsinki)', 'Pirkanmaa (Tampere)', 'Varsinais-Suomi (Turku)', 
+    'North Ostrobothnia (Oulu)', 'Central Finland'
+  ],
+  'France': [
+    'All Regions / Nationwide', 'Île-de-France (Paris)', 'Auvergne-Rhône-Alpes (Lyon)', 
+    'Provence-Alpes-Côte d\'Azur (Marseille/Nice)', 'Occitanie (Toulouse)', 'Nouvelle-Aquitaine (Bordeaux)'
+  ],
+  'Australia': [
+    'All States / Nationwide', 'New South Wales (Sydney)', 'Victoria (Melbourne)', 'Queensland (Brisbane)', 
+    'Western Australia (Perth)', 'South Australia (Adelaide)', 'Tasmania', 'Australian Capital Territory (Canberra)'
+  ],
+  'Italy': [
+    'All Regions / Nationwide', 'Lombardy (Milan)', 'Lazio (Rome)', 'Campania (Naples)', 'Veneto (Venice)', 
+    'Piedmont (Turin)', 'Tuscany (Florence)'
+  ],
+  'Spain': [
+    'All Regions / Nationwide', 'Community of Madrid (Madrid)', 'Catalonia (Barcelona)', 'Andalusia (Seville/Malaga)', 
+    'Valencian Community (Valencia)', 'Basque Country (Bilbao)'
+  ],
+  'South Africa': [
+    'All Provinces / Nationwide', 'Gauteng (Johannesburg/Pretoria)', 'Western Cape (Cape Town)', 
+    'KwaZulu-Natal (Durban)', 'Eastern Cape', 'Free State'
+  ],
+  'Ghana': [
+    'All Regions / Nationwide', 'Greater Accra (Accra)', 'Ashanti (Kumasi)', 'Western Region', 'Eastern Region', 
+    'Central Region', 'Northern Region'
+  ],
+  'Kenya': [
+    'All Counties / Nationwide', 'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Kiambu', 'Uasin Gishu'
+  ],
+  'United Arab Emirates': [
+    'All Emirates / Nationwide', 'Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah'
+  ],
+  'Saudi Arabia': [
+    'All Provinces / Nationwide', 'Riyadh', 'Makkah (Jeddah)', 'Eastern Province (Dammam)', 'Madinah'
+  ],
+  'India': [
+    'All States / Nationwide', 'Maharashtra (Mumbai)', 'Delhi NCR', 'Karnataka (Bengaluru)', 
+    'Tamil Nadu (Chennai)', 'Telangana (Hyderabad)', 'West Bengal (Kolkata)'
+  ],
+  'Brazil': [
+    'All States / Nationwide', 'São Paulo', 'Rio de Janeiro', 'Minas Gerais', 'Bahia', 'Paraná'
+  ],
+  'Worldwide / Global': [
+    'All Global Cities & Regions (Global Audience)'
+  ]
+};
+
 const Campaigns = () => {
   const [platforms, setPlatforms] = useState(DEFAULT_FALLBACK_PLATFORMS);
   const [campaigns, setCampaigns] = useState([]);
@@ -56,11 +135,12 @@ const Campaigns = () => {
   const [selectedPlatformId, setSelectedPlatformId] = useState(DEFAULT_FALLBACK_PLATFORMS[0]._id);
   const [selectedGoal, setSelectedGoal] = useState('Hookup Ads');
 
-  // Age Preferences (Opening Page requirement)
+  // Age Preferences & Location Targeting
   const [ageMin, setAgeMin] = useState(18);
   const [ageMax, setAgeMax] = useState(65);
   const [gender, setGender] = useState('All');
   const [targetCountry, setTargetCountry] = useState('Nigeria');
+  const [targetState, setTargetState] = useState('Lagos');
 
   // Budget & Time Settings (Min 7000 coins / 24h, 1 to 30 days)
   const [budgetPerDay, setBudgetPerDay] = useState(7000);
@@ -201,7 +281,7 @@ const Campaigns = () => {
         destination_url: landingPage,
       },
       media_files: mediaFiles,
-      target_locations: [{ country: targetCountry }],
+      target_locations: [{ country: targetCountry, state: targetState, city: targetState }],
       target_audience: {
         age_min: Number(ageMin),
         age_max: Number(ageMax),
@@ -479,19 +559,43 @@ const Campaigns = () => {
               </div>
             </div>
 
-            <div className="space-y-1 pt-2">
-              <label className="text-[10px] uppercase font-bold text-slate-500">Target Country / Region</label>
-              <select
-                value={targetCountry}
-                onChange={(e) => setTargetCountry(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none"
-              >
-                <option value="Nigeria">Nigeria</option>
-                <option value="United Kingdom">United Kingdom</option>
-                <option value="United States">United States</option>
-                <option value="Canada">Canada</option>
-                <option value="Worldwide">Worldwide / Global</option>
-              </select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase font-bold text-slate-500">Target Country / Region *</label>
+                <select
+                  value={targetCountry}
+                  onChange={(e) => {
+                    const newCountry = e.target.value;
+                    setTargetCountry(newCountry);
+                    const states = COUNTRY_STATE_DATA[newCountry] || [];
+                    if (states.length > 0) {
+                      setTargetState(states[0]);
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none"
+                >
+                  {Object.keys(COUNTRY_STATE_DATA).map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase font-bold text-slate-500">Target State / City / Province *</label>
+                <select
+                  value={targetState}
+                  onChange={(e) => setTargetState(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 focus:outline-none"
+                >
+                  {(COUNTRY_STATE_DATA[targetCountry] || ['All Cities & Regions']).map((st) => (
+                    <option key={st} value={st}>
+                      {st}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
