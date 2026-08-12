@@ -10,11 +10,19 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     const root = window.document.documentElement;
+    const body = window.document.body;
+    
     if (theme === 'dark') {
       root.classList.add('dark');
+      root.classList.remove('light');
+      body.classList.add('bg-slate-950', 'text-slate-100');
+      body.classList.remove('bg-slate-50', 'text-slate-900');
       root.style.colorScheme = 'dark';
     } else {
       root.classList.remove('dark');
+      root.classList.add('light');
+      body.classList.add('bg-slate-50', 'text-slate-900');
+      body.classList.remove('bg-slate-950', 'text-slate-100');
       root.style.colorScheme = 'light';
     }
     localStorage.setItem('theme', theme);
