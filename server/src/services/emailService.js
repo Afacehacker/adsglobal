@@ -8,25 +8,25 @@ const createTransporter = async () => {
 
   const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
   const smtpUser = process.env.SMTP_USER || 'janiellaton7@gmail.com';
-  const smtpPass = process.env.SMTP_PASS;
+  const smtpPass = (process.env.SMTP_PASS || 'ksbb gvcz wcdk wfjw').replace(/\s+/g, '');
 
   // Primary: If custom SMTP / App Password exists
   if (smtpUser && smtpPass) {
     try {
       transporter = nodemailer.createTransport({
-        service: smtpUser.includes('@gmail.com') ? 'gmail' : undefined,
+        service: 'gmail',
         host: smtpHost,
-        port: parseInt(process.env.SMTP_PORT) || 587,
-        secure: process.env.SMTP_SECURE === 'true',
-        connectionTimeout: 5000,
-        greetingTimeout: 5000,
-        socketTimeout: 5000,
+        port: 587,
+        secure: false,
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 10000,
         auth: {
           user: smtpUser,
           pass: smtpPass,
         },
       });
-      console.log('Primary SMTP Transporter initialized for:', smtpUser);
+      console.log('Primary Gmail SMTP Transporter initialized for:', smtpUser);
       return transporter;
     } catch (err) {
       console.warn('Primary SMTP initialization error:', err.message);
