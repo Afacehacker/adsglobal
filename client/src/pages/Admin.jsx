@@ -28,8 +28,9 @@ const Admin = () => {
   const [adjustAmount, setAdjustAmount] = useState('');
   const [adjustReason, setAdjustReason] = useState('');
 
-  // Deposit reject reason state
+  // Deposit reject reason & image modal state
   const [rejectReason, setRejectReason] = useState('');
+  const [previewProofModalImage, setPreviewProofModalImage] = useState(null);
 
   // Order status update state
   const [orderStatus, setOrderStatus] = useState('PAID');
@@ -127,7 +128,11 @@ const Admin = () => {
     }
   };
 
-  const handleDepositReview = async (depId, approvalStatus) => {
+  const handleDepositReview = async (depId, approvalStatus, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setActionLoading(true);
     try {
       await api.post(`/admin/deposits/${depId}/review`, {
@@ -136,7 +141,7 @@ const Admin = () => {
       });
       setSuccess(`Deposit request reviewed: ${approvalStatus}`);
       setRejectReason('');
-      fetchAdminData();
+      setDeposits(prev => prev.map(d => d._id === depId ? { ...d, status: approvalStatus } : d));
     } catch (err) {
       alert(err.response?.data?.error || 'Failed to review deposit');
     } finally {
@@ -428,11 +433,33 @@ const Admin = () => {
                         }`}>{dep.status}</span>
                       </div>
 
-                      {/* Display Uploaded Proof screenshot if available */}
+                      {/* Display Uploaded Proof screenshot clearly with click-to-expand */}
                       {dep.proof_image && (
-                        <div className="max-w-[200px] border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-950">
-                          <span className="text-[9px] text-slate-400 font-bold block p-1.5 border-b uppercase">Screenshot Proof:</span>
-                          <img src={dep.proof_image} alt="Proof" className="w-full h-auto" />
+                        <div className="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-slate-900/50 p-3 space-y-2 max-w-lg">
+                          <div className="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase">
+                            <span>📷 Payment Transfer Screenshot Proof:</span>
+                            <button
+                              type="button"
+                              onClick={() => setPreviewProofModalImage(dep.proof_image)}
+                              className="text-violet-400 hover:text-violet-300 flex items-center gap-1 font-bold underline cursor-pointer"
+                            >
+                              <Eye className="w-3.5 h-3.5" /> View Fullscreen HD
+                            </button>
+                          </div>
+                          
+                          <div
+                            onClick={() => setPreviewProofModalImage(dep.proof_image)}
+                            className="rounded-xl overflow-hidden border border-slate-700/60 bg-black max-h-72 cursor-pointer group relative flex justify-center items-center"
+                          >
+                            <img
+                              src={dep.proof_image}
+                              alt="Payment Proof Screenshot"
+                              className="max-h-72 w-auto object-contain group-hover:scale-105 transition duration-200"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1.5">
+                              <Eye className="w-4 h-4" /> Click to Expand HD Image
+                            </div>
+                          </div>
                         </div>
                       )}
 
@@ -440,22 +467,24 @@ const Admin = () => {
                         <div className="flex gap-2 items-center border-t border-slate-200/50 dark:border-slate-800/50 pt-3">
                           <input
                             type="text"
-                            placeholder="Rejection reason details..."
+                            placeholder="Rejection reason details (optional)..."
                             value={rejectReason}
                             onChange={(e) => setRejectReason(e.target.value)}
                             className="flex-grow px-3 py-1.5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-lg text-[10px] focus:outline-none"
                           />
                           <button
-                            onClick={() => handleDepositReview(dep._id, 'APPROVED')}
-                            className="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-lg text-[10px]"
+                            type="button"
+                            onClick={(e) => handleDepositReview(dep._id, 'APPROVED', e)}
+                            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs transition shadow-sm flex items-center gap-1"
                           >
-                            Approve
+                            ✓ Approve Payment
                           </button>
                           <button
-                            onClick={() => handleDepositReview(dep._id, 'REJECTED')}
-                            className="px-3.5 py-1.5 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg text-[10px]"
+                            type="button"
+                            onClick={(e) => handleDepositReview(dep._id, 'REJECTED', e)}
+                            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl text-xs transition shadow-sm flex items-center gap-1"
                           >
-                            Reject
+                            ✕ Reject
                           </button>
                         </div>
                       )}
@@ -861,6 +890,42 @@ const Admin = () => {
                 SAVE METRICS & STATUS
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* FULLSCREEN HD PAYMENT SCREENSHOT PROOF MODAL */}
+      {previewProofModalImage && (
+        <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="relative max-w-4xl w-full max-h-[90vh] bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden flex flex-col shadow-2xl">
+            <div className="flex justify-between items-center p-4 border-b border-slate-800 bg-slate-950">
+              <span className="font-extrabold text-xs text-white uppercase tracking-wider flex items-center gap-2">
+                📷 Payment Transfer Screenshot Proof (HD Viewer)
+              </span>
+              <button
+                type="button"
+                onClick={() => setPreviewProofModalImage(null)}
+                className="p-1 text-slate-400 hover:text-white bg-slate-800 rounded-full transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-4 flex-grow overflow-auto flex justify-center items-center bg-black/60">
+              <img
+                src={previewProofModalImage}
+                alt="Full Payment Proof"
+                className="max-w-full max-h-[75vh] object-contain rounded-xl shadow-lg border border-slate-800"
+              />
+            </div>
+            <div className="p-3 bg-slate-950 border-t border-slate-800 text-center">
+              <button
+                type="button"
+                onClick={() => setPreviewProofModalImage(null)}
+                className="px-6 py-2 bg-violet-600 hover:bg-violet-700 text-white font-extrabold text-xs rounded-xl transition"
+              >
+                Close HD Viewer
+              </button>
+            </div>
           </div>
         </div>
       )}
