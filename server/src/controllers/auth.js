@@ -27,8 +27,8 @@ exports.register = async (req, res, next) => {
         userExists.emailOTPExpires = new Date(Date.now() + 15 * 60 * 1000);
         await userExists.save();
 
-        // Send Verification OTP Email in background
-        sendVerificationOTP(userExists.email, otpCode, userExists.name).catch(err => console.error('OTP send error:', err.message));
+        // Send Verification OTP Email
+        await sendVerificationOTP(userExists.email, otpCode, userExists.name);
 
         return res.status(200).json({
           success: true,
@@ -59,8 +59,8 @@ exports.register = async (req, res, next) => {
     // Create associated Wallet for user
     await Wallet.create({ user: user._id });
 
-    // Send Verification OTP Email in background (non-blocking for instant response)
-    sendVerificationOTP(user.email, otpCode, user.name).catch(err => console.error('OTP send error:', err.message));
+    // Send Verification OTP Email
+    await sendVerificationOTP(user.email, otpCode, user.name);
 
     res.status(201).json({
       success: true,
@@ -120,8 +120,8 @@ exports.verifyEmailOTP = async (req, res, next) => {
     user.emailOTPExpires = undefined;
     await user.save();
 
-    // Send Welcome Email immediately after successful verification in background
-    sendWelcomeEmail(user.email, user.name).catch(err => console.error('Welcome email error:', err.message));
+    // Send Welcome Email immediately after successful verification
+    await sendWelcomeEmail(user.email, user.name);
 
     // Sign Token for instant login
     const token = signToken(user._id);
@@ -171,8 +171,8 @@ exports.resendOTP = async (req, res, next) => {
     user.emailOTPExpires = new Date(Date.now() + 15 * 60 * 1000);
     await user.save();
 
-    // Send Verification OTP Email in background
-    sendVerificationOTP(user.email, otpCode, user.name).catch(err => console.error('OTP resend error:', err.message));
+    // Send Verification OTP Email
+    await sendVerificationOTP(user.email, otpCode, user.name);
 
     res.status(200).json({
       success: true,
@@ -219,8 +219,8 @@ exports.login = async (req, res, next) => {
       user.emailOTPExpires = new Date(Date.now() + 15 * 60 * 1000);
       await user.save();
 
-      // Send Verification OTP Email in background
-      sendVerificationOTP(user.email, otpCode, user.name).catch(err => console.error('OTP login resend error:', err.message));
+      // Send Verification OTP Email
+      await sendVerificationOTP(user.email, otpCode, user.name);
 
       return res.status(403).json({
         error: 'Your email address is not verified yet. A 6-digit verification code has been sent to your email.',
