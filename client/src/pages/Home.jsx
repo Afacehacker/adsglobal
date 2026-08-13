@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { 
   ShieldCheck, Truck, Megaphone, Coins, ChevronRight, Globe, Layers, 
   ArrowRight, Star, HelpCircle, MapPin, Search, PlusCircle, Sparkles, 
-  Eye, MousePointer, ExternalLink, Filter, Building, Compass, Gift, Heart, PackageCheck
+  Eye, MousePointer, ExternalLink, Filter, Building, Compass, Gift, Heart, PackageCheck, Flame
 } from 'lucide-react';
 import api from '../services/api';
 import TelegramModal from '../components/TelegramModal';
@@ -167,35 +167,73 @@ const Home = () => {
           </div>
 
           {/* ACTIVE COUNTRIES CLASSIFIED ADS COUNTER BANNER */}
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center justify-center gap-2">
-              <Globe className="w-4 h-4 text-violet-400" /> Live Ads Posted By Country
+          <div className="max-w-5xl mx-auto space-y-6">
+            <div className="space-y-3">
+              <div className="text-center text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-2">
+                <Globe className="w-4 h-4 text-violet-400" /> Live Ads Posted By Country
+              </div>
+              
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+                {locations.map((loc) => {
+                  const isSelected = selectedCountry === loc.country;
+                  return (
+                    <button
+                      key={loc.country}
+                      onClick={() => {
+                        setSelectedCountry(loc.country);
+                        handleSearch();
+                      }}
+                      className={`px-4 py-2 rounded-2xl border text-xs font-bold transition flex items-center gap-2 ${
+                        isSelected
+                          ? 'bg-violet-600 text-white border-violet-500 shadow-md ring-2 ring-violet-500/40'
+                          : 'bg-slate-800/80 hover:bg-slate-800 text-slate-200 border-slate-700/80'
+                      }`}
+                    >
+                      <span>{loc.flag}</span>
+                      <span>{loc.country}</span>
+                      <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-[10px] font-black">
+                        {loc.count} Ads
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-              {locations.map((loc) => {
-                const isSelected = selectedCountry === loc.country;
-                return (
+
+            {/* POPULAR AD PACKAGES & CATEGORIES SECTION */}
+            <div className="space-y-3 pt-4 border-t border-slate-800/60">
+              <div className="text-center text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center justify-center gap-2">
+                <Flame className="w-4 h-4 text-amber-400 fill-amber-400" /> Popular Ad Packages & Categories
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
+                {[
+                  { name: 'Hookup Ads', icon: '🔥', count: 84, color: 'from-pink-500/20 to-rose-500/20 text-pink-400 border-pink-500/30' },
+                  { name: 'Dating Ads', icon: '💕', count: 42, color: 'from-purple-500/20 to-pink-500/20 text-purple-300 border-purple-500/30' },
+                  { name: 'Drug & Pharmacy Ads', icon: '💊', count: 29, color: 'from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/30' },
+                  { name: 'Vehicle & Auto Ads', icon: '🚗', count: 56, color: 'from-blue-500/20 to-indigo-500/20 text-blue-400 border-blue-500/30' },
+                  { name: 'Real Estate & Housing', icon: '🏠', count: 38, color: 'from-amber-500/20 to-orange-500/20 text-amber-400 border-amber-500/30' },
+                  { name: 'Electronics & Gadgets', icon: '📱', count: 64, color: 'from-cyan-500/20 to-sky-500/20 text-cyan-400 border-cyan-500/30' },
+                  { name: 'Jobs & Overseas Employment', icon: '💼', count: 21, color: 'from-indigo-500/20 to-violet-500/20 text-indigo-300 border-indigo-500/30' },
+                  { name: 'Gift Delivery & Forwarding', icon: '🎁', count: 95, color: 'from-teal-500/20 to-emerald-500/20 text-teal-300 border-teal-500/30' },
+                ].map((cat) => (
                   <button
-                    key={loc.country}
+                    key={cat.name}
+                    type="button"
                     onClick={() => {
-                      setSelectedCountry(loc.country);
+                      setSearchQuery(cat.name);
                       handleSearch();
                     }}
-                    className={`px-4 py-2 rounded-2xl border text-xs font-bold transition flex items-center gap-2 ${
-                      isSelected
-                        ? 'bg-violet-600 text-white border-violet-500 shadow-md ring-2 ring-violet-500/40'
-                        : 'bg-slate-800/80 hover:bg-slate-800 text-slate-200 border-slate-700/80'
-                    }`}
+                    className={`px-4 py-2.5 rounded-2xl border text-xs font-extrabold transition flex items-center gap-2 bg-gradient-to-r ${cat.color} hover:scale-105 shadow-sm`}
                   >
-                    <span>{loc.flag}</span>
-                    <span>{loc.country}</span>
-                    <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-[10px] font-black">
-                      {loc.count} Ads
+                    <span>{cat.icon}</span>
+                    <span>{cat.name}</span>
+                    <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-black">
+                      {cat.count} Ads
                     </span>
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
           </div>
 
