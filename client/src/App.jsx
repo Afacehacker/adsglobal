@@ -23,6 +23,7 @@ import Compliance from './pages/Compliance';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import FloatingSupportWidget from './components/FloatingSupportWidget';
+import RecentActivityTicker from './components/RecentActivityTicker';
 
 // Route guards
 const ProtectedRoute = ({ children }) => {
@@ -107,6 +108,7 @@ function App() {
         </main>
         <Footer />
         <FloatingSupportWidget />
+        <RecentActivityTicker />
       </div>
     </Router>
   );
