@@ -69,11 +69,115 @@ const seedData = async () => {
     const catTech = await ProductCategory.create({ name: 'Electronics & Tech', slug: 'electronics-tech', description: 'Smartphones, laptops, and gadgets' });
     const catHome = await ProductCategory.create({ name: 'Home & Living', slug: 'home-living', description: 'Home decor, frames, throw pillows, and candles' });
     const catAuto = await ProductCategory.create({ name: 'Automotive & Vehicles', slug: 'automotive-vehicles', description: 'Vehicle parts, EV chargers, and car accessories' });
+    const catAdultToys = await ProductCategory.create({ name: 'Adult Toys', slug: 'adult-toys', description: 'Adult toys, intimacy products, vibrators, and adult wellness accessories' });
 
     console.log('Product categories created.');
 
     // 4. Seed 100+ Real-Life US Marketplace Products Across Categories
     await Product.create([
+      // --- ADULT TOYS ---
+      {
+        name: 'Realistic Suction Base Dildo Set (S, M, L Options)',
+        sku: 'PRD-TOY-01',
+        category: catAdultToys._id,
+        description: 'Premium skin-safe silicone realistic suction dildos available in Small (S), Medium (M), and Large (L) sizes. Features a powerful suction base for hands-free positioning on any smooth surface.',
+        short_description: 'Silicone realistic suction dildos in S, M, and L sizes.',
+        price_coins: 24500,
+        images: ['/images/adult_toys/adult_toy_1.jpg', '/uploads/adult_toy_1.jpg'],
+        stock: 45,
+        weight_kg: 0.6,
+        dimensions: { length_cm: 22, width_cm: 6, height_cm: 6 },
+        package_type: 'box',
+        fragile: false,
+        restricted: true,
+        delivery_eligible: true,
+        featured: true
+      },
+      {
+        name: 'Luxury Curved Multi-Color Flesh Dildo Collection',
+        sku: 'PRD-TOY-02',
+        category: catAdultToys._id,
+        description: 'Ergonomically contoured multi-color dildo collection crafted from body-safe medical silicone. Designed for max comfort, smooth flexibility, and easy cleaning.',
+        short_description: 'Multi-color flexible body-safe silicone dildos.',
+        price_coins: 21000,
+        images: ['/images/adult_toys/adult_toy_2.jpg', '/uploads/adult_toy_2.jpg'],
+        stock: 50,
+        weight_kg: 0.5,
+        dimensions: { length_cm: 20, width_cm: 5, height_cm: 5 },
+        package_type: 'box',
+        fragile: false,
+        restricted: true,
+        delivery_eligible: true,
+        featured: true
+      },
+      {
+        name: 'Textured Veined Realistic Silicone Dildo Pair',
+        sku: 'PRD-TOY-03',
+        category: catAdultToys._id,
+        description: 'High-definition veined realistic silicone dildos with textured outer ridging and reinforced suction cup base for versatile position attachment.',
+        short_description: 'Textured veined realistic silicone dildos with suction base.',
+        price_coins: 28500,
+        images: ['/images/adult_toys/adult_toy_3.jpg', '/uploads/adult_toy_3.jpg'],
+        stock: 30,
+        weight_kg: 0.7,
+        dimensions: { length_cm: 24, width_cm: 7, height_cm: 7 },
+        package_type: 'box',
+        fragile: false,
+        restricted: true,
+        delivery_eligible: true,
+        featured: true
+      },
+      {
+        name: 'Compact Handheld Mini Wand Vibrator Set',
+        sku: 'PRD-TOY-04',
+        category: catAdultToys._id,
+        description: 'Rechargeable ultra-quiet mini wand massager pair (Hot Pink & Stealth Black). Features 10 powerful vibration modes, soft silicone head, and USB magnetic charging.',
+        short_description: 'Rechargeable 10-speed mini wand vibrators (Pink & Black).',
+        price_coins: 16500,
+        images: ['/images/adult_toys/adult_toy_4.jpg', '/uploads/adult_toy_4.jpg'],
+        stock: 60,
+        weight_kg: 0.3,
+        dimensions: { length_cm: 15, width_cm: 4, height_cm: 4 },
+        package_type: 'box',
+        fragile: false,
+        restricted: true,
+        delivery_eligible: true,
+        featured: true
+      },
+      {
+        name: 'Romantic Rose Air-Suction Clitoral Vibrator & Bag',
+        sku: 'PRD-TOY-05',
+        category: catAdultToys._id,
+        description: 'Award-winning Rose-design suction toy utilizing pressure wave pulse technology. 10 intensity suction modes, IPX7 waterproof, soft satin discreet storage pouch included.',
+        short_description: 'Rose suction clitoral vibrator with satin storage pouch.',
+        price_coins: 19500,
+        images: ['/images/adult_toys/adult_toy_5.jpg', '/uploads/adult_toy_5.jpg'],
+        stock: 75,
+        weight_kg: 0.4,
+        dimensions: { length_cm: 12, width_cm: 8, height_cm: 8 },
+        package_type: 'box',
+        fragile: false,
+        restricted: true,
+        delivery_eligible: true,
+        featured: true
+      },
+      {
+        name: '10-Frequency Rose Suction & Extension Dual Vibrator',
+        sku: 'PRD-TOY-06',
+        category: catAdultToys._id,
+        description: 'Premium dual-action Rose vibrator combining oral suction technology with extending & contracting vibration tongue stem for simultaneous inner and outer stimulation.',
+        short_description: 'Dual rose suction and extending stem 10-frequency vibrator.',
+        price_coins: 32000,
+        images: ['/images/adult_toys/adult_toy_6.jpg', '/uploads/adult_toy_6.jpg'],
+        stock: 40,
+        weight_kg: 0.5,
+        dimensions: { length_cm: 18, width_cm: 6, height_cm: 6 },
+        package_type: 'box',
+        fragile: false,
+        restricted: true,
+        delivery_eligible: true,
+        featured: true
+      },
       // --- 1. FAST FOOD & EXPRESS MEALS (Cheap ones first) ---
       {
         name: 'Coca-Cola Original Taste Soda Cans (12-Can Pack)',

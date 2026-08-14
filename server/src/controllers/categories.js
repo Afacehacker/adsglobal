@@ -17,7 +17,8 @@ exports.getCategories = async (req, res, next) => {
       'Beauty & Fashion',
       'Food & Groceries',
       'Home & Living',
-      'Automotive & Vehicles'
+      'Automotive & Vehicles',
+      'Adult Toys'
     ];
 
     const sortedCategories = rawCategories.sort((a, b) => {
